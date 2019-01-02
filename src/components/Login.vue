@@ -1,5 +1,6 @@
 <template lang="html">
-  <div class="">
+  <div class="middle-align">
+    <img src="../assets/logo.png" class="logo">
     <el-row>
       <el-col :span="10" :offset="7">
         <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -120,8 +121,14 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.el-col {
-    // margin-bottom:
+<style scoped>
+.middle-align {
+    text-align: center;
+}
+
+.logo {
+    position: relative;
+    width: 30%;
+    margin-bottom: 40px;
 }
 </style>

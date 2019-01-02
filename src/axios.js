@@ -43,5 +43,38 @@ export default {
 	// 删除用户
 	delUser(data) {
 		return instance.post('/api/delUser', data)
+	},
+	addBook(data) {
+		return instance.post('/api/addBook', data)
+	},
+	allBooks(data) {
+		return instance.post('/api/allBooks', data)
+	},
+	getBook(data) {
+		return instance.post('/api/getBook', data)
+	},
+	addProblem(data) {
+		return instance.post('/api/addProblem', data)
+	},
+	allProblems(data) {
+		return instance.post('/api/allProblems', data)
+	},
+	getProblem(data) {
+		return instance.post('/api/getProblem', data)
+	},
+	filteredProblems(data) {
+		return instance.post('api/filteredProblems', data)
+	},
+	deleteProblem(data) {
+		return instance.post('api/deleteProblem', data)
+	},
+	deleteBook(data) {
+		return instance.post('api/deleteBook', data)
+	},
+	editProblem(data) {
+		return instance.post('api/editProblem', data)
+	},
+	changeFavourite(data) {
+		return instance.post('api/changeFavourite', data)
 	}
 }

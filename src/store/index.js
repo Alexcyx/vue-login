@@ -8,7 +8,10 @@ Vue.use(Vuex);
 const state = {
 	token: null,
 	activeName: 'first',
-	username: ''
+	username: '',
+	books: [],
+	book: '',
+	problems: []
 }
 
 export default new Vuex.Store({

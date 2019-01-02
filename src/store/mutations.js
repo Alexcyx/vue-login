@@ -8,11 +8,21 @@ const mutations = {
 	},
 	[types.LOGOUT]: (state) => {
 		localStorage.removeItem('token');
-		state.token = null
+		state.token = null;
+		state.books = [];
 	},
 	[types.USERNAME]: (state, data) => {
 		localStorage.setItem('username', data)
 		state.username = data
+	},
+	[types.GETBOOKS]: (state, data) => {
+		state.books = data
+	},
+	[types.GETBOOK]: (state, data) => {
+		state.book = data
+	},
+	[types.GETPROBLEMS]: (state, data) => {
+		state.problems = data
 	}
 }
 export default mutations

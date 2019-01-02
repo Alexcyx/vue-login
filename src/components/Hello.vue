@@ -1,8 +1,16 @@
 <template scope='scope'>
 <div class="hello">
-    <h1>{{ msg }}: {{ username }}</h1>
-
-    <!-- v-for在进行过度时，使用 transition-group 标签，使用后内层标签需要有独有的 key 值 -->
+    <!-- <h1>{{ msg }}: {{ username }}</h1> -->
+    <el-container>
+        <el-header height="40px">
+            <myhead :user="username" @logout="logout()"></myhead>
+        </el-header>
+        <el-main>
+            <home></home>
+        </el-main>
+    </el-container>
+    
+    <br>
     <transition-group name="list-complete" tag="ul">
         <li v-for="(item, index) in user" :key="item._id" class="list-complete-item">
             {{ index+1 }}. {{ item.email }}
@@ -20,8 +28,14 @@
  */
 import * as types from '../store/types'
 import api from '../axios'
+import home from './Home.vue'
+import myhead from './Header.vue'
+
 export default {
     name: 'hello',
+    components: {
+        home, myhead
+    },
     data() {
         return {
             msg: 'Welcome to Vue-login',
@@ -102,6 +116,10 @@ li {
 
 a {
     color: #42b983;
+}
+
+.hello {
+    height: 200px;
 }
 
 .list-complete-item {

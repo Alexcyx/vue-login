@@ -20,10 +20,27 @@ var userSchema = mongoose.Schema({
 	create_time: Date
 })
 
+var booksSchema = mongoose.Schema({
+	user: String,
+	name: String
+})
+
+var problemSchema = mongoose.Schema({
+	title: String,
+	collections: String,
+	favourite: Boolean,
+	problem: String,
+	answer: String,
+	date: Date,
+	photo: String
+})
+
 var model = {
 	// 在此处扩展 model，例如：
 	// Article: mongoose.model('Article', articleSchema),
-	User: mongoose.model('User', userSchema)
+	User: mongoose.model('User', userSchema),
+	Problem: mongoose.model('Problem', problemSchema),
+	Books: mongoose.model('Books', booksSchema)
 }
 
 module.exports = model
