@@ -3,8 +3,7 @@
     <el-row style="border-bottom: 1px solid #eee; border-right: 1px solid #eee;">
         <h4 id="text"><i class="el-icon-tickets"></i> 我的错题本</h4>
     </el-row>
-    <el-row class="">
-        
+    <el-row class="menu-content">
         <el-menu
             @select="handleSelect"
             background-color="#ffffff">
@@ -17,7 +16,7 @@
             </el-menu-item>
         </el-menu>
     </el-row>
-    <el-row>
+    <el-row class="bottom">
         <span>
             <el-button type="primary" icon="el-icon-plus" circle @click="createFormVisible = true"></el-button>
             <el-dialog 
@@ -84,12 +83,13 @@
                             user: localStorage.getItem('username')
                         }
                         this.$store.dispatch('AddBook', newBook);
+                        console.log(this.$store.state.books);
                         this.createFormVisible = false;
                     } else {
                         console.log('error submit!');
                     }
                 })
-                this.$forceUpdate();
+                // this.$forceUpdate();
             },
             close(formName) {
                 this.$refs[formName].resetFields();
@@ -101,6 +101,18 @@
 <style>
     .menu {
         text-align: center;
-        height: 90%;
+    }
+
+    .menu-content {
+        height: -webkit-fill-available;
+        overflow: scroll;
+        border-right: 1px solid #eee;
+    }
+
+    .bottom {
+        border-top: 1px solid #eee;
+        border-right: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+        padding: 20px 0;
     }
 </style>

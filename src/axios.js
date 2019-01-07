@@ -76,5 +76,8 @@ export default {
 	},
 	changeFavourite(data) {
 		return instance.post('api/changeFavourite', data)
+	},
+	getPDF(data) {
+		return instance.post('api/getPDF', data)
 	}
 }

@@ -11,24 +11,17 @@
             </el-select>
         </el-form-item>
         <el-form-item label="题目" prop="problem">
-            <el-input type="textarea" v-model="form.problem"></el-input>
+            <!-- <el-input type="textarea" v-model="form.problem"></el-input> -->
+            <div id="div1" class="toolbar"></div>
+            <div id="div2" class="text"></div>
         </el-form-item>
         <el-form-item label="答案" prop="answer">
-            <el-input type="textarea" v-model="form.answer"></el-input>
+            <div id="div3" class="toolbar"></div>
+            <div id="div4" class="text"></div>
+            <!-- <el-input type="textarea" v-model="form.answer"></el-input> -->
         </el-form-item>
         <el-form-item label="收藏错题">
             <el-switch v-model="form.favourite"></el-switch>
-        </el-form-item>
-        <el-form-item label="添加照片">
-            <el-upload
-                class="upload-demo"
-                drag
-                action="https://jsonplaceholder.typicode.com/posts/"
-                multiple>
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="onSubmit('formData')">{{isCreate ? '立即添加' : '提交修改'}}</el-button>
@@ -38,6 +31,8 @@
 </template>
 
 <script>
+    import E from 'wangeditor'
+
     export default {
         props: {
             oldForm: {
@@ -60,6 +55,87 @@
         },
         created() {
             this.collections = this.$store.state.books;
+        },
+        mounted() {
+            var editor1 = new E('#div1', '#div2');
+            editor1.customConfig.menus = [
+                'head',  // 标题
+                'bold',  // 粗体
+                'fontSize',  // 字号
+                'fontName',  // 字体
+                'italic',  // 斜体
+                'underline',  // 下划线
+                'strikeThrough',  // 删除线
+                'link',  // 插入链接
+                'list',  // 列表
+                'justify',  // 对齐方式
+                'quote',  // 引用
+                'image',  // 插入图片
+                'table',  // 表格
+                'video',  // 插入视频
+                'code',  // 插入代码
+                'undo',  // 撤销
+                'redo'  // 重复
+            ];
+            editor1.customConfig.onchange = (html) => {
+                this.form.problem = html;
+            }
+            editor1.customConfig.uploadImgServer = '/api/upload';
+            editor1.customConfig.uploadFileName = 'uploadedFile';
+            editor1.customConfig.uploadImgHooks = {
+                success: function(xhr, editor, results) {
+                    var ret = [];
+                    results.data.forEach((value) => {
+                        ret.push(value);
+                    });
+                    console.log(xhr, editor, ret);
+                    // this.form['photo'] = [...ret];
+                }
+            }
+            editor1.create();
+            if (!this.isCreate) {
+                editor1.txt.html(this.form.problem);
+            }
+
+            var editor2 = new E('#div3', '#div4');
+            editor2.customConfig.menus = [
+                'head',  // 标题
+                'bold',  // 粗体
+                'fontSize',  // 字号
+                'fontName',  // 字体
+                'italic',  // 斜体
+                'underline',  // 下划线
+                'strikeThrough',  // 删除线
+                'link',  // 插入链接
+                'list',  // 列表
+                'justify',  // 对齐方式
+                'quote',  // 引用
+                'image',  // 插入图片
+                'table',  // 表格
+                'video',  // 插入视频
+                'code',  // 插入代码
+                'undo',  // 撤销
+                'redo'  // 重复
+            ];
+            editor2.customConfig.onchange = (html) => {
+                this.form.answer = html;
+            }
+            editor2.customConfig.uploadImgServer = '/api/upload';
+            editor2.customConfig.uploadFileName = 'uploadedFile';
+            editor2.customConfig.uploadImgHooks = {
+                success: function(xhr, editor, results) {
+                    var ret = [];
+                    results.data.forEach((value) => {
+                        ret.push(value);
+                    });
+                    console.log(xhr, editor, ret);
+                    // this.form['photo'] = [...ret];
+                }
+            }
+            editor2.create();
+            if (!this.isCreate) {
+                editor2.txt.html(this.form.answer);
+            }
         },
         data() {
             return {
@@ -93,7 +169,7 @@
                             this.form['collections'] = this.$store.state.book._id;
                             this.form['date'] = date.getTime();
                         }
-                        this.form['photo'] = '/';
+                        // this.form['photo'] = '/';
                         this.$emit('submitForm', this.form);
                         console.log('submit!');
                     } else {
@@ -110,3 +186,14 @@
         }
     }
 </script>
+
+<style scoped>
+    .toolbar {
+        border: 1px solid #ccc;
+    }
+    .text {
+        border: 1px solid #ccc;
+        /* height: 200px; */
+        text-align:left;
+    }
+</style>

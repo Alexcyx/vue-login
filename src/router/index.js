@@ -13,6 +13,24 @@ const router = new Router({
 					resolve(require('@/components/Hello.vue'));
 				});
 			},
+			children: [
+				{
+					path: 'home',
+					component(resolve) {
+						require.ensure(['@/components/Home.vue'], () => {
+							resolve(require('@/components/Home.vue'));
+						});
+					}
+				},
+				{
+					path: 'output',
+					component(resolve) {
+						require.ensure(['@/components/Output.vue'], () => {
+							resolve(require('@/components/Output.vue'));
+						});
+					}
+				}
+			],
 			// 设置 mata 字段，表示该字段需要验证
 			meta: {
 				requireAuth: true

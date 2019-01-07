@@ -10,6 +10,8 @@ const mutations = {
 		localStorage.removeItem('token');
 		state.token = null;
 		state.books = [];
+		state.problems = [];
+		state.book = null;
 	},
 	[types.USERNAME]: (state, data) => {
 		localStorage.setItem('username', data)

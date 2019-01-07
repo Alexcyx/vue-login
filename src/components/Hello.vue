@@ -6,11 +6,11 @@
             <myhead :user="username" @logout="logout()"></myhead>
         </el-header>
         <el-main>
-            <home></home>
+            <router-view></router-view>
         </el-main>
     </el-container>
-    
-    <br>
+
+    <!-- <br>
     <transition-group name="list-complete" tag="ul">
         <li v-for="(item, index) in user" :key="item._id" class="list-complete-item">
             {{ index+1 }}. {{ item.email }}
@@ -18,7 +18,7 @@
         </li>
     </transition-group>
     <br>
-    <el-button type="primary" @click="logout()">登出</el-button>
+    <el-button type="primary" @click="logout()">登出</el-button> -->
 </div>
 </template>
 
@@ -46,6 +46,7 @@ export default {
     mounted() {
         this.get_User()
         this.username = localStorage.getItem('username')
+        this.$router.push('/home')
     },
     methods: {
         get_User() {
@@ -118,10 +119,6 @@ a {
     color: #42b983;
 }
 
-.hello {
-    height: 200px;
-}
-
 .list-complete-item {
     transition: all 1s;
     display: inline-block;
@@ -137,4 +134,5 @@ a {
 .list-complete-leave-active {
     position: absolute;
 }
+
 </style>

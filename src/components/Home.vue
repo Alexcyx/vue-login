@@ -24,6 +24,7 @@
                     title="添加错题" 
                     :visible.sync="createFormVisible"
                     @close="reRender = !reRender" 
+                    width="50%" 
                     v-if="reRender">
                     <create key="create1" @submitForm="createProblem" @cancelCreate="createFormVisible = false"></create>
                 </el-dialog>
@@ -31,6 +32,7 @@
                     title="添加错题" 
                     :visible.sync="createFormVisible" 
                     @close="reRender = !reRender" 
+                    width="50%" 
                     v-else>
                     <create key="crerate2" @submitForm="createProblem" @cancelCreate="createFormVisible = false"></create>
                 </el-dialog>
@@ -50,9 +52,11 @@
             <el-row>
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="预览错题" name="first">
-                    <div v-if="book">
+                    <div v-if="book" class="content">
                         <div v-for="problem in problems" :key="problem._id" class="card">
-                            <card :problemId="problem._id" @delete="deleteProblem" @edit="refresh"></card>
+                            <transition name="el-fade-in">
+                                <card v-show="show" :problemId="problem._id" @delete="deleteProblem" @edit="refresh"></card>
+                            </transition>
                         </div>
                     </div>
                     <div v-else>
@@ -60,11 +64,18 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="答题模式" name="second">
-                    <div v-for="problem in problems" :key="problem._id" class="card">
-                        <card :problemId="problem" :quizMode="true" @delete="deleteProblem" @edit="refresh"></card>
+                    <div v-if="book" class="content">
+                        <div v-for="problem in problems" :key="problem._id" class="card">
+                            <transition name="el-fade-in">
+                                <card v-show="show" :problemId="problem" :quizMode="true" @delete="deleteProblem" @edit="refresh"></card>
+                            </transition>
+                        </div>
+                    </div>
+                    <div v-else>
+                        请选择一本错题本！
                     </div>
                 </el-tab-pane>
-            </el-tabs>
+                </el-tabs>
             </el-row>
         </el-main>
     </el-container>
@@ -76,6 +87,7 @@
     import side from './Side.vue'
     import create from './Create.vue'
     import api from '../axios.js'
+import { setTimeout } from 'timers';
 
     export default {
         name: 'home',
@@ -84,6 +96,9 @@
         },
         created() {
             this.$store.dispatch('GetBooks', localStorage.getItem('username'));
+            setTimeout(() => {
+                this.show = true;
+            }, 200);
         },
         data() {
             return {
@@ -119,6 +134,7 @@
                 createFormVisible: false,
                 deleteFormVisible: false,
                 reRender: false,
+                show: false
             };
         },
         computed: {
@@ -169,6 +185,7 @@
                 this.$store.dispatch('GetBook', obj);
                 this.$store.dispatch('GetProblems', key);
                 this.value = '';
+                this.show = false;
             },
             deleteProblem(problemId) {
                 console.log(problemId);
@@ -197,6 +214,7 @@
             refresh() {
                 this.$store.dispatch('GetProblems', this.book._id);
                 this.value = '';
+                this.show = false;
             }
         },
         watch: {
@@ -226,6 +244,13 @@
                 } else {
                     this.$store.dispatch('GetProblems', this.book._id);
                 }
+            },
+            show: function(newValue, oldValue) {
+                if (!newValue) {
+                    setTimeout(() => {
+                        this.show = true;
+                    }, 200);
+                }
             }
         }
     };
@@ -246,8 +271,9 @@
         padding-bottom: 20px;
     }
 
-    .cards {
-        
+    .content {
+        overflow: scroll;
+        height: -webkit-fill-available;
     }
 
     .side-menu {

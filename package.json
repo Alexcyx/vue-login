@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "element-ui": "^2.4.11",
+    "formidable": "^1.2.1",
+    "html2canvas": "^1.0.0-alpha.12",
     "vue": "^2.1.10",
-    "vue-router": "^2.2.0"
+    "vue-router": "^2.2.0",
+    "wangeditor": "^3.1.1",
+    "xss": "^1.0.3"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",

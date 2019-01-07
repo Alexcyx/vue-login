@@ -1,8 +1,8 @@
 <template>
 <div class="myhead">
     <el-row>
-        <el-col :span="4">
-            <span>LOGO goes here</span>
+        <el-col :span="4" class="logo">
+            <span>欢迎，{{user}}</span>
         </el-col>
         <el-col :span="20">
             <el-menu
@@ -10,7 +10,7 @@
                 mode="horizontal"
                 @select="handleSelect">
                 <el-menu-item index="1">主页</el-menu-item>
-                <el-menu-item index="2">欢迎，{{user}}</el-menu-item>
+                <el-menu-item index="2">导出错题</el-menu-item>
                 <el-menu-item index="3">登出</el-menu-item>
             </el-menu>
         </el-col>
@@ -37,6 +37,12 @@
                 if (key == 3) {
                     this.$emit('logout');
                 }
+                if (key == 1) {
+                    this.$router.push('/home');
+                }
+                if (key == 2) {
+                    this.$router.push('/output');
+                }
             }
         }
     }
@@ -46,5 +52,9 @@
     .myhead {
         border: 1px solid  #eee;
         border-bottom-width: 0px;
+    }
+    .logo {
+        border-bottom: 1px solid #eee;
+        height: 61px;
     }
 </style>

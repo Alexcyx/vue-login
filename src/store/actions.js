@@ -20,6 +20,21 @@ var getBooks = function(username) {
 		}
 		// console.log(books);
 	});
+	// setTimeout(() => {
+	// 	api.allBooks(obj).then(({
+	// 		data
+	// 	}) => {
+	// 		if (data.code == 401) {
+	// 			console.log('token');
+				
+	// 		} else {
+	// 			data.forEach(book => {
+	// 				books.push(book);
+	// 			});
+	// 		}
+	// 		// console.log(books);
+	// 	});
+	// }, 200);
 	return books;
 }
 
@@ -55,24 +70,32 @@ export default {
 		commit(types.USERNAME, data)
 	},
 
-	AddBook({ commit }, data) {
+	AddBook({ commit }, book) {
 		// api modify data
-		let book = {
-			name: data.name,
-			user: data.user
+		let obj = {
+			name: book.name,
+			user: book.user
 		};
-		api.addBook(book);
-		let books = getBooks(data.user);
-		commit(types.GETBOOKS, books)
+		api.addBook(obj).then(({
+			data
+		}) => {
+			if (data.success) {
+				let books = getBooks(book.user);
+				commit(types.GETBOOKS, books);
+			}
+		});
 	},
 
-	DeleteBook({ commit }, data) {
+	DeleteBook({ commit }, book) {
 		// api modify data
-		console.log(data);
-		api.deleteBook(data);
-		let books = getBooks(data.user);
-		console.log(books);
-		commit(types.GETBOOKS, books)
+		api.deleteBook(book).then(({
+			data
+		}) => {
+			if (data.success) {
+				let books = getBooks(book.user);
+				commit(types.GETBOOKS, books);
+			}
+		});
 	},
 
 	GetBooks({ commit }, data) {

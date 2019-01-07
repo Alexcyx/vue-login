@@ -101,6 +101,38 @@ const ChangeFavourite = (req, res) => {
     })
 }
 
+const GetPDF = (req, res) => {
+    let query = {};
+    query['collections'] = {
+        $in: req.body.collections
+    };
+    if (req.body.date1 && req.body.date2) {
+        query['date'] = {
+            $lte: new Date(req.body.date2),
+            $gte: new Date(req.body.date1)
+        }
+    }
+    if (req.body.favourite) {
+        query['favourite'] = true;
+    }
+    console.log(query)
+    model.Problem.find(query, (err, doc) => {
+        if (err) console.log(err);
+        if (doc.length > 0) {
+            res.json({
+                success: true,
+                documents: doc
+            })
+        } else {
+            console.log('err');
+            res.json({
+                success: false
+            })
+        }
+        
+    })
+}
+
 module.exports = (router) => {
     router.post('/addProblem', AddProblem),
     router.post('/allProblems', AllProblems),
@@ -108,5 +140,6 @@ module.exports = (router) => {
     router.post('/filteredProblems', FilteredProblems),
     router.post('/deleteProblem', DeleteProblem),
     router.post('/editProblem', EditProblem),
-    router.post('/changeFavourite', ChangeFavourite)
+    router.post('/changeFavourite', ChangeFavourite),
+    router.post('/getPDF', GetPDF)
 }
