@@ -1,8 +1,8 @@
 {
-  "name": "vue-login",
+  "name": "errorsaver",
   "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "ykloveyxk <562872810@qq.com>",
+  "description": "errors collection and review",
+  "author": "Alexcyx",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
