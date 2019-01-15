@@ -33,6 +33,8 @@
 <script>
     import E from 'wangeditor'
 
+    
+
     export default {
         props: {
             oldForm: {
@@ -44,7 +46,8 @@
                         favourite: false,
                         problem: '',
                         answer: '',
-                        date: ''
+                        date: '',
+                        photo: []
                     }
                 }
             },
@@ -57,80 +60,52 @@
             this.collections = this.$store.state.books;
         },
         mounted() {
-            var editor1 = new E('#div1', '#div2');
-            editor1.customConfig.menus = [
-                'head',  // 标题
-                'bold',  // 粗体
-                'fontSize',  // 字号
-                'fontName',  // 字体
-                'italic',  // 斜体
-                'underline',  // 下划线
-                'strikeThrough',  // 删除线
-                'link',  // 插入链接
-                'list',  // 列表
-                'justify',  // 对齐方式
-                'quote',  // 引用
-                'image',  // 插入图片
-                'table',  // 表格
-                'video',  // 插入视频
-                'code',  // 插入代码
-                'undo',  // 撤销
-                'redo'  // 重复
-            ];
+            const success = (xhr, editor, results) => {
+                var ret = [];
+                results.data.forEach((value) => {
+                    this.form['photo'].push(value);
+                });
+            }
+            const config = {
+                menus: [
+                    'head',  // 标题
+                    'bold',  // 粗体
+                    'fontSize',  // 字号
+                    'fontName',  // 字体
+                    'italic',  // 斜体
+                    'underline',  // 下划线
+                    'strikeThrough',  // 删除线
+                    'link',  // 插入链接
+                    'list',  // 列表
+                    'justify',  // 对齐方式
+                    'quote',  // 引用
+                    'image',  // 插入图片
+                    'table',  // 表格
+                    'video',  // 插入视频
+                    'code',  // 插入代码
+                    'undo',  // 撤销
+                    'redo'  // 重复
+                ],
+                uploadImgServer: '/api/upload',
+                uploadFileName: 'uploadedFile',
+                uploadImgHooks: {
+                    success
+                },
+            }
+            let editor1 = new E('#div1', '#div2');
+            editor1.customConfig = config;
             editor1.customConfig.onchange = (html) => {
                 this.form.problem = html;
-            }
-            editor1.customConfig.uploadImgServer = '/api/upload';
-            editor1.customConfig.uploadFileName = 'uploadedFile';
-            editor1.customConfig.uploadImgHooks = {
-                success: function(xhr, editor, results) {
-                    var ret = [];
-                    results.data.forEach((value) => {
-                        ret.push(value);
-                    });
-                    console.log(xhr, editor, ret);
-                    // this.form['photo'] = [...ret];
-                }
             }
             editor1.create();
             if (!this.isCreate) {
                 editor1.txt.html(this.form.problem);
             }
 
-            var editor2 = new E('#div3', '#div4');
-            editor2.customConfig.menus = [
-                'head',  // 标题
-                'bold',  // 粗体
-                'fontSize',  // 字号
-                'fontName',  // 字体
-                'italic',  // 斜体
-                'underline',  // 下划线
-                'strikeThrough',  // 删除线
-                'link',  // 插入链接
-                'list',  // 列表
-                'justify',  // 对齐方式
-                'quote',  // 引用
-                'image',  // 插入图片
-                'table',  // 表格
-                'video',  // 插入视频
-                'code',  // 插入代码
-                'undo',  // 撤销
-                'redo'  // 重复
-            ];
+            let editor2 = new E('#div3', '#div4');
+            editor2.customConfig = config;
             editor2.customConfig.onchange = (html) => {
                 this.form.answer = html;
-            }
-            editor2.customConfig.uploadImgServer = '/api/upload';
-            editor2.customConfig.uploadFileName = 'uploadedFile';
-            editor2.customConfig.uploadImgHooks = {
-                success: function(xhr, editor, results) {
-                    var ret = [];
-                    results.data.forEach((value) => {
-                        ret.push(value);
-                    });
-                    console.log(xhr, editor, ret);
-                    // this.form['photo'] = [...ret];
-                }
             }
             editor2.create();
             if (!this.isCreate) {
@@ -144,7 +119,8 @@
                     collections: this.oldForm.collections,
                     favourite: this.oldForm.favourite,
                     problem: this.oldForm.problem,
-                    answer: this.oldForm.answer
+                    answer: this.oldForm.answer,
+                    photo: []
                 },
                 rules: {
                     title: [
@@ -193,7 +169,7 @@
     }
     .text {
         border: 1px solid #ccc;
-        /* height: 200px; */
+        min-height: 200px;
         text-align:left;
     }
 </style>

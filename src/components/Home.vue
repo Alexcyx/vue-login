@@ -21,20 +21,22 @@
                 </el-dialog>
                 <el-button type="primary" class="btn" @click="selectedBook('createFormVisible')">添加错题</el-button>
                 <el-dialog 
+                    :visible="createFormVisible"
+                    :key="'firstDialog'"
                     title="添加错题" 
-                    :visible.sync="createFormVisible"
-                    @close="reRender = !reRender" 
+                    @close="closeDialog" 
                     width="50%" 
-                    v-if="reRender">
-                    <create key="create1" @submitForm="createProblem" @cancelCreate="createFormVisible = false"></create>
+                    v-if="reRender && createFormVisible">
+                    <create key="firstCreate" @submitForm="createProblem" @cancelCreate="createFormVisible = false"></create>
                 </el-dialog>
                 <el-dialog 
+                    :visible="createFormVisible"
+                    :key="'secondDialog'"
                     title="添加错题" 
-                    :visible.sync="createFormVisible" 
-                    @close="reRender = !reRender" 
+                    @close="closeDialog" 
                     width="50%" 
-                    v-else>
-                    <create key="crerate2" @submitForm="createProblem" @cancelCreate="createFormVisible = false"></create>
+                    v-if="!reRender && createFormVisible">
+                    <create key="secondCreate" @submitForm="createProblem" @cancelCreate="createFormVisible = false"></create>
                 </el-dialog>
                 <div class="btn">
                     <el-date-picker
@@ -55,7 +57,7 @@
                     <div v-if="book" class="content">
                         <div v-for="problem in problems" :key="problem._id" class="card">
                             <transition name="el-fade-in">
-                                <card v-show="show" :problemId="problem._id" @delete="deleteProblem" @edit="refresh"></card>
+                                <card :key="problem._id" v-show="show" :problemId="problem._id" @delete="deleteProblem" @edit="refresh"></card>
                             </transition>
                         </div>
                     </div>
@@ -87,7 +89,7 @@
     import side from './Side.vue'
     import create from './Create.vue'
     import api from '../axios.js'
-import { setTimeout } from 'timers';
+    import { setTimeout } from 'timers';
 
     export default {
         name: 'home',
@@ -133,14 +135,13 @@ import { setTimeout } from 'timers';
                 activeName: 'first',
                 createFormVisible: false,
                 deleteFormVisible: false,
-                reRender: false,
+                reRender: false, // 初始未重新渲染
                 show: false
             };
         },
         computed: {
             bookName: function() {
-                if (this.book)
-                    return this.book.name;
+                return this.book ? this.book.name : '';
             },
             book: function() {
                 return this.$store.state.book;
@@ -152,17 +153,14 @@ import { setTimeout } from 'timers';
         methods: {
             createProblem(form) {
                 this.createFormVisible = false;
-                console.log(form);
                 this.$store.dispatch('AddProblem', form);
                 this.refresh();
             },
             selectedBook(visible) {
                 if (this.book) {
-                    if (visible === 'createFormVisible') {
-                        this.createFormVisible = true;
-                    } else {
-                        this.deleteFormVisible = true;
-                    }
+                    visible === 'createFormVisible' 
+                        ? this.createFormVisible = true 
+                        : this.deleteFormVisible = true;
                 } else {
                     this.$message({
                         type: 'info',
@@ -173,10 +171,13 @@ import { setTimeout } from 'timers';
             deleteBook() {
                 this.deleteFormVisible = false;
                 this.$store.dispatch('DeleteBook', this.book);
-                console.log('deleted!');
-                let obj = {_id: this.$store.state.books.splice(0, 1)._id};
-                console.log(obj);
-                this.$store.dispatch('GetBook', obj);
+                let len = this.$store.state.books.length;
+                console.log(len);
+                if (len > 1) {
+                    let obj = {_id: this.$store.state.books[this.$store.state.books.length - 2]._id};
+                    console.log(obj);
+                    this.$store.dispatch('GetBook', obj);
+                }
                 this.refresh();
             },
             handleClick() {},
@@ -215,6 +216,10 @@ import { setTimeout } from 'timers';
                 this.$store.dispatch('GetProblems', this.book._id);
                 this.value = '';
                 this.show = false;
+            },
+            closeDialog() {
+                this.reRender = !this.reRender;
+                this.createFormVisible = false;
             }
         },
         watch: {

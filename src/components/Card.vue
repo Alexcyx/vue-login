@@ -24,19 +24,19 @@
             </el-button>
         </el-tooltip>
         <el-dialog 
+            :visible="editFormVisible"
             title="编辑错题" 
-            :visible.sync="editFormVisible"
-            @close="reRender = !reRender" 
+            @close="closeDialog" 
             width="60%" 
-            v-if="reRender">
+            v-if="reRender && editFormVisible">
             <create key="create1" :isCreate="false" :oldForm="this.post" @submitForm="editProblem" @cancelCreate="editFormVisible = false"></create>
         </el-dialog>
         <el-dialog 
+            :visible="editFormVisible"
             title="编辑错题" 
-            :visible.sync="editFormVisible"
-            @close="reRender = !reRender" 
+            @close="closeDialog" 
             width="60%" 
-            v-else>
+            v-if="!reRender && editFormVisible">
             <create key="create2" :isCreate="false" :oldForm="this.post" @submitForm="editProblem" @cancelCreate="editFormVisible = false"></create>
         </el-dialog>
         <el-tooltip content="收藏" placement="top">
@@ -165,8 +165,10 @@
                 console.log('changed favourite!')
                 this.getProblem();
             },
-            updatePost(newPost) {
-                console.log('updated post!');
+            closeDialog() {
+                console.log('closed');
+                this.reRender = !this.reRender;
+                this.editFormVisible = false;
             }
         }
     }

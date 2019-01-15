@@ -1,6 +1,7 @@
 const express = require('express');
 const model = require('../db/db.js');
 const router = express.Router();
+const fs = require('fs');
 
 const AddProblem = (req, res) => {
     // console.log(req.body);
@@ -63,6 +64,16 @@ const DeleteProblem = (req, res) => {
         _id: (req.body._id)
     }, (err, doc) => {
         if (err) console.log(err);
+        let path = './server/public/images/';
+        doc.photo.split(',').forEach(item => {
+            let url = item.split('/');
+            let name = url[url.length - 1];
+            fs.unlink(path + name, err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        })
         res.json({
             success: true
         });

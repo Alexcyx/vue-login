@@ -92,6 +92,7 @@ export default {
 			data
 		}) => {
 			if (data.success) {
+				console.log('delete success');
 				let books = getBooks(book.user);
 				commit(types.GETBOOKS, books);
 			}
@@ -112,7 +113,7 @@ export default {
 				console.log('token');
 				
 			} else {
-				commit(types.GETBOOK, data)
+				commit(types.GETBOOK, data);
 			}
 		})
 	},

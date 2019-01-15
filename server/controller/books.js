@@ -1,6 +1,7 @@
 const express = require('express');
 const model = require('../db/db.js');
 const router = express.Router();
+const fs = require('fs');
 
 const AddBook = (req, res) => {
     console.log(req.body);
@@ -52,21 +53,43 @@ const GetBook = (req, res) => {
 const DeleteBook = (req, res) => {
     let id = req.body._id;
     let flag = false;
-    model.Books.findOneAndRemove({
-        _id: (id)
+    model.Problem.find({
+        collections: (id)
     }, (err, doc) => {
         if (err) console.log(err);
-        flag = true;
-    })
+        let path = './server/public/images/';
+        doc.forEach(problem => {
+            if (problem.photo) {
+                problem.photo.split(',').forEach(item => {
+                    console.log('photo: ', item);
+                    let url = item.split('/');
+                    let name = url[url.length - 1];
+                    fs.unlink(path + name, err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                });
+            }
+        })
+    });
     model.Problem.remove({
         collections: (id)
     }, (err, doc) => {
         if (err) console.log(err);
+        else flag = true
+    });
+    model.Books.findOneAndRemove({
+        _id: (id)
+    }, (err, doc) => {
+        if (err) {
+            console.log(err);
+            flag = false;
+        }
         res.json({
             success: flag && true
         })
-
-    })
+    });
 }
 
 module.exports = (router) => {

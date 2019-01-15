@@ -71,25 +71,23 @@
             handleSelect(key, keyPath) {
                 console.log(key, keyPath);
                 this.selected = key;
+                let token = localStorage.getItem('token');
                 this.$emit('select', key);
             },
             addBook(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         console.log('added new book!');
-                        console.log(this.form);
                         let newBook = {
                             name: this.form.name,
                             user: localStorage.getItem('username')
                         }
                         this.$store.dispatch('AddBook', newBook);
-                        console.log(this.$store.state.books);
                         this.createFormVisible = false;
                     } else {
                         console.log('error submit!');
                     }
                 })
-                // this.$forceUpdate();
             },
             close(formName) {
                 this.$refs[formName].resetFields();
